@@ -90,7 +90,7 @@ A: No. This is a legacy release as-is.
 
 ## 📄 License
 
-MIT License - Do whatever you want with it. If it breaks, check the Minecraft version, then check the API version, then accept that this is how Bedrock addon development works.
+GNU LGPL v3 - Do whatever you want with it. If it breaks, check the Minecraft version, then check the API version, then accept that this is how Bedrock addon development works.
 
 ## 🔗 Links
 
