@@ -1,46 +1,37 @@
 /**
- * Aethelgrad Core Legacy
- * Copyright (C) 2026 WladyslawKW
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
+ * @file commands/hub/setradius.js
+ * @description Command to set the hub protection radius (Refactored to DOD)
  */
 
-// Set Radius Command
-// Sets the hub protection radius
-
 import { BaseCommand } from '../base/BaseCommand.js';
-import { world, CustomCommandStatus } from "@minecraft/server";
+import { CustomCommandStatus, CustomCommandParamType } from "@minecraft/server";
+import { configManager } from "../../core/ConfigManager.js";
 
 export class SetRadiusCommand extends BaseCommand {
     constructor() {
         super({
             name: "setradius",
             description: "Set hub radius",
-            department: "h" // Hub department requires AEH tag
+            department: "h",
+            arguments: [
+                {
+                    name: "radius",
+                    type: CustomCommandParamType.Integer
+                }
+            ]
         });
     }
 
     execute(sender, args) {
-        // Permission handled by BaseCommand department system
+        const radius = args.radius ?? args[0];
 
-        // args[0] is the radius because we bypassed the parser
-        const radius = Number(args[0]);
-
-        if (Number.isNaN(radius) || args[0] === undefined) {
-            return { status: CustomCommandStatus.Failure, message: "§cUsage: /ae:setradius <number> or !ae setradius <number>" };
+        if (radius === undefined || Number.isNaN(radius)) {
+            return { status: CustomCommandStatus.Failure, message: "§cUsage: /ae:setradius <radius>" };
         }
 
-        if (radius < 0 || radius > 10000) {
-            return { 
-                status: CustomCommandStatus.Failure, 
-                message: "§cRadius must be between 0 and 10000." 
-            };
-        }
-        
-        world.setDynamicProperty("ae:hub_radius", radius);
+        configManager.set("hub.radius", radius);
+        configManager.save("hub.radius");
+
         return { 
             status: CustomCommandStatus.Success, 
             message: `§eHub radius set to §a${radius}§e blocks.` 
